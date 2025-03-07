@@ -1,6 +1,6 @@
 package com.kibit_home_assignment.Instant.Payment.API.repository;
 
-import com.kibit_home_assignment.Instant.Payment.API.dto.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Transaction;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import java.util.UUID;

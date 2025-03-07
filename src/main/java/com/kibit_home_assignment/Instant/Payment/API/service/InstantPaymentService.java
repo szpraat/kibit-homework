@@ -3,11 +3,13 @@ package com.kibit_home_assignment.Instant.Payment.API.service;
 import com.kibit_home_assignment.Instant.Payment.API.dto.InstantPaymentRequest;
 import com.kibit_home_assignment.Instant.Payment.API.dto.InstantPaymentResponse;
 import com.kibit_home_assignment.Instant.Payment.API.dto.PaymentNotification;
-import com.kibit_home_assignment.Instant.Payment.API.dto.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.mapper.PaymentNotificationMapper;
 import com.kibit_home_assignment.Instant.Payment.API.mapper.TransactionMapper;
-import java.time.LocalDateTime;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +19,7 @@ public class InstantPaymentService {
     private final TransactionService transactionService;
     private final TransactionMapper transactionMapper;
     private final NotificationService notificationService;
+    private final PaymentNotificationMapper paymentNotificationMapper;
 
     public InstantPaymentResponse processPayment(InstantPaymentRequest instantPaymentRequest) {
 
@@ -24,12 +27,7 @@ public class InstantPaymentService {
         transactionValidationService.validateTransaction(transaction);
         transactionService.processTransaction(transaction);
 
-        PaymentNotification paymentNotification = PaymentNotification.builder()
-             .transactionId(transaction.getTransactionId())
-             .sourceAccountId(transaction.getSourceAccountId())
-             .targetAccountId(transaction.getTargetAccountId())
-             .amount(transaction.getAmount())
-             .timestamp(LocalDateTime.now().toString()).build();
+        PaymentNotification paymentNotification = paymentNotificationMapper.toPaymentNotification(transaction);
 
         notificationService.sendNotification(paymentNotification);
 

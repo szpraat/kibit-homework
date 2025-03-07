@@ -6,8 +6,6 @@ services:
     depends_on:
       - postgres
       - kafka
-    networks:
-      - mynetwork
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/instant-payments-db
       - SPRING_DATASOURCE_USERNAME=myuser
@@ -19,11 +17,12 @@ services:
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
     ports:
       - "8080:8080"
+    networks:
+      - mynetwork
+
   postgres:
     image: 'postgres:latest'
     container_name: instant-payments-db
-    volumes:
-      - ./src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - 'POSTGRES_DB=instant-payments-db'
       - 'POSTGRES_PASSWORD=secret'
@@ -32,20 +31,21 @@ services:
       - '5432:5432'
     networks:
       - mynetwork
+    volumes:
+      - ./src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   pgadmin:
+    depends_on:
+      - postgres
     image: dpage/pgadmin4:latest
     container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "8888:80"
     networks:
       - mynetwork
-    depends_on:
-      - postgres
 
   kafka:
     depends_on:
@@ -63,9 +63,9 @@ services:
       - mynetwork
 
   kafka-ui:
-    image: provectuslabs/kafka-ui:latest
     depends_on:
       - kafka
+    image: provectuslabs/kafka-ui:latest
     ports:
       - "9090:9090"
     environment:

@@ -3,7 +3,7 @@ package com.kibit_home_assignment.Instant.Payment.API.exception;
 import com.kibit_home_assignment.Instant.Payment.API.dto.ApiResponseWrapper;
 import com.kibit_home_assignment.Instant.Payment.API.dto.ErrorDetail;
 import com.kibit_home_assignment.Instant.Payment.API.dto.InstantPaymentResponse;
-import com.kibit_home_assignment.Instant.Payment.API.dto.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Transaction;
 import com.kibit_home_assignment.Instant.Payment.API.enums.TransactionState;
 import com.kibit_home_assignment.Instant.Payment.API.repository.TransactionRepository;
 import java.util.List;
@@ -48,6 +48,16 @@ public class ExceptionHandler {
         ApiResponseWrapper<InstantPaymentResponse> apiResponseWrapper = ApiResponseWrapper.failure(List.of(new ErrorDetail(null,
                 exception.getMessage())));
         log.error("Insufficient funds: {}", apiResponseWrapper);
+        Transaction failedTransaction = exception.getTransaction();
+        handleTransactionFailure(failedTransaction, exception.getMessage());
+        return new ResponseEntity<>(apiResponseWrapper, HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(CurrencyMismatchException.class)
+    public ResponseEntity<ApiResponseWrapper<InstantPaymentResponse>> handleCurrencyMismatchException (CurrencyMismatchException exception){
+        ApiResponseWrapper<InstantPaymentResponse> apiResponseWrapper = ApiResponseWrapper.failure(List.of(new ErrorDetail(null,
+                exception.getMessage())));
+        log.error("Currency mismatch: {}", apiResponseWrapper);
         Transaction failedTransaction = exception.getTransaction();
         handleTransactionFailure(failedTransaction, exception.getMessage());
         return new ResponseEntity<>(apiResponseWrapper, HttpStatus.BAD_REQUEST);

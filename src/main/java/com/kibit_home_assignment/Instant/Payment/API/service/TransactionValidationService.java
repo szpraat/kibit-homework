@@ -1,8 +1,9 @@
 package com.kibit_home_assignment.Instant.Payment.API.service;
 
-import com.kibit_home_assignment.Instant.Payment.API.dto.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Transaction;
 import com.kibit_home_assignment.Instant.Payment.API.exception.AccountNotFoundException;
-import com.kibit_home_assignment.Instant.Payment.API.dto.Account;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Account;
+import com.kibit_home_assignment.Instant.Payment.API.exception.CurrencyMismatchException;
 import com.kibit_home_assignment.Instant.Payment.API.exception.InsufficientFundsException;
 import com.kibit_home_assignment.Instant.Payment.API.exception.TransactionAlreadyProcessedException;
 import com.kibit_home_assignment.Instant.Payment.API.repository.AccountRepository;
@@ -25,7 +26,8 @@ public class TransactionValidationService {
     public void validateTransaction(Transaction transaction) {
         checkDuplicatedTransaction(transaction);
         Account sourceAccount = findAccount(transaction.getSourceAccountId(), "Source", transaction);
-        findAccount(transaction.getTargetAccountId(), "Target", transaction);
+        Account targetAccount = findAccount(transaction.getTargetAccountId(), "Target", transaction);
+        checkSameCurrency(sourceAccount.getCurrency(), targetAccount.getCurrency(), transaction);
         checkSufficientFunds(transaction, sourceAccount);
     }
 
@@ -41,10 +43,16 @@ public class TransactionValidationService {
                 });
     }
 
-    private static void checkSufficientFunds(Transaction transaction, Account sourceAccount) {
+    private void checkSufficientFunds(Transaction transaction, Account sourceAccount) {
         if (sourceAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
             throw new InsufficientFundsException("Source account balance is insufficient for transaction",
                     transaction);
+        }
+    }
+
+    private void checkSameCurrency(String sourceCurrency, String targetCurrency, Transaction transaction) {
+        if (!sourceCurrency.equals(targetCurrency)) {
+            throw new CurrencyMismatchException("Source and target accounts must have the same currency", transaction);
         }
     }
 }
