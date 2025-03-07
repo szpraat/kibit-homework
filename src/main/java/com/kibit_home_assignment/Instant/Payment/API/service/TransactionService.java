@@ -1,6 +1,6 @@
 package com.kibit_home_assignment.Instant.Payment.API.service;
 
-import com.kibit_home_assignment.Instant.Payment.API.dto.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Transaction;
 import com.kibit_home_assignment.Instant.Payment.API.enums.TransactionState;
 import com.kibit_home_assignment.Instant.Payment.API.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,13 @@ public class TransactionService {
         updateTransaction(transaction);
     }
 
+    @Transactional
     public void storeTransaction(Transaction transaction) {
         transactionRepository.findTransactionByTransactionId(transaction.getTransactionId());
         transactionRepository.save(transaction);
     }
 
+    @Transactional
     public void updateTransaction(Transaction transaction) {
         transactionRepository.findTransactionByTransactionId(transaction.getTransactionId());
         transactionRepository.save(transaction);

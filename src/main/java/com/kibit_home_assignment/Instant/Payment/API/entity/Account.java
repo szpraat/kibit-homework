@@ -1,4 +1,4 @@
-package com.kibit_home_assignment.Instant.Payment.API.dto;
+package com.kibit_home_assignment.Instant.Payment.API.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

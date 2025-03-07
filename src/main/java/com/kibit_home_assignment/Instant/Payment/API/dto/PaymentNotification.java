@@ -10,6 +10,7 @@ public record PaymentNotification(
         UUID sourceAccountId,
         UUID targetAccountId,
         BigDecimal amount,
+        String currency,
         String timestamp
 ) {
 }

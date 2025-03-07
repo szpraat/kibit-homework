@@ -1,4 +1,4 @@
-package com.kibit_home_assignment.Instant.Payment.API.dto;
+package com.kibit_home_assignment.Instant.Payment.API.entity;
 
 import com.kibit_home_assignment.Instant.Payment.API.enums.TransactionState;
 import jakarta.persistence.Column;
@@ -39,6 +39,9 @@ public class Transaction {
 
         @Column(nullable = false)
         UUID targetAccountId;
+
+        @Column(nullable = false)
+        String currency;
 
         @Column(nullable = false)
         BigDecimal amount;

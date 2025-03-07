@@ -7,8 +7,10 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.UUID;
+import lombok.Builder;
 
 @DifferentAccounts
+@Builder
 public record InstantPaymentRequest(
         @Schema(description = "Unique identifier for the transaction", example = "e9f2e0b0-426b-478f-9d68-9bc6c9613c8c")
         @NotNull(message = "Transaction ID cannot be null")

@@ -1,6 +1,6 @@
 package com.kibit_home_assignment.Instant.Payment.API.exception;
 
-import com.kibit_home_assignment.Instant.Payment.API.dto.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Transaction;
 import lombok.Getter;
 
 @Getter

@@ -1,8 +1,8 @@
 package com.kibit_home_assignment.Instant.Payment.API.service;
 
 
-import com.kibit_home_assignment.Instant.Payment.API.dto.Account;
-import com.kibit_home_assignment.Instant.Payment.API.dto.Transaction;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Account;
+import com.kibit_home_assignment.Instant.Payment.API.entity.Transaction;
 import com.kibit_home_assignment.Instant.Payment.API.repository.AccountRepository;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
