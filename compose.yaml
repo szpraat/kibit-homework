@@ -1,13 +1,88 @@
-version: '3'
 services:
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - mynetwork
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/instant-payments-db
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_KAFKA_PRODUCER_TOPIC=instant-payment-notification
+      - SPRING_APPLICATION_NAME=Instant-Payment-API
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+    ports:
+      - "8080:8080"
   postgres:
     image: 'postgres:latest'
+    container_name: instant-payments-db
+    volumes:
+      - ./src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_DB=instant-payments-db'
       - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=myuser'
     ports:
       - '5432:5432'
+    networks:
+      - mynetwork
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "8888:80"
+    networks:
+      - mynetwork
+    depends_on:
+      - postgres
+
+  kafka:
+    depends_on:
+      - zookeeper
+    image: 'confluentinc/cp-kafka:latest'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - mynetwork
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka
+    ports:
+      - "9090:9090"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      SERVER_PORT: 9090
+    networks:
+      - mynetwork
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
     networks:
       - mynetwork
 
