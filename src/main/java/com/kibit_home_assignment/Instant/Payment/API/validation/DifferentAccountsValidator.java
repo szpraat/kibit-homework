@@ -13,6 +13,10 @@ public class DifferentAccountsValidator implements
             return true;
         }
 
+        if (request.sourceAccountId() == null || request.targetAccountId() == null) {
+            return true;
+        }
+
         return !request.sourceAccountId().equals(request.targetAccountId());
     }
 }
