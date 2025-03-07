@@ -85,7 +85,7 @@ public class ExceptionHandler {
     public ResponseEntity<ApiResponseWrapper<Void>> handleGenericException(Exception exception) {
         ApiResponseWrapper<Void> apiResponseWrapper = ApiResponseWrapper.failure(List.of(new ErrorDetail(null,
                 exception.getMessage())));
-        log.error("Unexpected runtime exception: {}", apiResponseWrapper);
+        log.error("Unexpected runtime exception: {}", exception.getMessage());
         return new ResponseEntity<>(apiResponseWrapper, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
