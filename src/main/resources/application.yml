@@ -2,7 +2,7 @@ spring:
   application:
     name: Instant-Payment-API
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydatabase
+    url: jdbc:postgresql://postgres:5432/instant-payments-db
     username: myuser
     password: secret
     driver-class-name: org.postgresql.Driver
@@ -10,7 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
 
 kafka:
   producer:
