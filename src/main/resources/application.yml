@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Instant-Payment-API
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+
+kafka:
+  producer:
+    topic: instant-payment-notification
