@@ -57,8 +57,8 @@ docker-compose --version
 ## Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/szpraat/instant-payment-service.git
-cd instant-payment-service
+git clone https://github.com/szpraat/kibit-homework.git
+cd Instant-Payment-API
 ```
 
 ## Step 2: Build and Start the Services
